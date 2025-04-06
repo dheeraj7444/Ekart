@@ -1,36 +1,42 @@
 apiVersion: apps/v1
-kind: Deployment # Kubernetes resource kind we are creating
+kind: Deployment
 metadata:
-  name: ekart-deployment
+  creationTimestamp: null
+  labels:
+    app: ecart
+  name: ecart
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: ekart
-  replicas: 2 # Number of replicas that will be created for this deployment
+      app: ecart
+  strategy: {}
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: ekart
+        app: ecart
     spec:
       containers:
-        - name: ekart
-          image: adijaiswal/ekart:latest # Image that will be used to containers in the cluster
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8070 # The port that the container is running on in the cluster
-
-
+      - image: dheeraj7444/shopping-cart:1
+        name: shopping-cart
+        resources: {}
+status: {}
 ---
-
-apiVersion: v1 # Kubernetes API version
-kind: Service # Kubernetes resource kind we are creating
-metadata: # Metadata of the resource kind we are creating
-  name: ekart-ssvc
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ecart
+  name: ecart
 spec:
-  selector:
-    app: ekart
   ports:
-    - protocol: "TCP"
-      port: 8070 # The port that the service is running on in the cluster
-      targetPort: 8070 # The port exposed by the service
-  type: LoadBalancer # type of the service.
+  - port: 8070
+    protocol: TCP
+    targetPort: 8070
+  selector:
+    app: ecart
+  type: NodePort
+status:
+  loadBalancer: {}
